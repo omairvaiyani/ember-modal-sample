@@ -1,0 +1,43 @@
+{{!-- The following component displays Ember's default welcome message. --}}
+{{welcome-page}}
+{{!-- Feel free to remove this! --}}
+
+{{outlet}}
+
+{{#each activeModals as |activeModal|}}
+    {{#bs-modal
+        id=activeModal.id
+        open=activeModal.isOpen
+        onHidden=activeModal.onHidden
+        onSubmit=activeModal.onSubmit
+        footer=false
+        backdropClose=activeModal.backdropClose
+        class=(if activeModal.isWide 'modal-wide')
+as |modal|
+}}
+    {{#if activeModal.title}}
+        {{#modal.header}}
+            {{#if activeModal.headerTemplate}}
+                {{partial activeModal.headerTemplate}}
+            {{else}}
+                <h4 class="modal-title">{{activeModal.title}}</h4>
+            {{/if}}
+        {{/modal.header}}
+    {{/if}}
+    {{#modal.body}}
+       
+            {{outlet activeModal.id}}
+       
+    {{/modal.body}}
+    {{#if activeModal.showFooter}}
+        {{#modal.footer as |footer|}}
+            {{#if activeModal.showCancelButton}}
+                {{#bs-button onClick=(action modal.close) type="default"}}{{activeModal.cancelLabel}}{{/bs-button}}
+            {{/if}}
+            {{#if activeModal.showSubmitButton}}
+                {{#bs-button onClick=(action modal.submit) type=activeModal.submitButtonType}}{{activeModal.submitLabel}}{{/bs-button}}
+            {{/if}}
+        {{/modal.footer}}
+    {{/if}}
+{{/bs-modal}}
+{{/each}}
